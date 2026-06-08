@@ -74,25 +74,34 @@
 <div class="textstyle4">
   <div class="gif-gallery">
     <div class="gif-item">
-      <img src="donkeykong.gif" alt="Donkey Kong" class="gif-card-img" />
+      <img src="donkeykong.gif" alt="Donkey Kong" class="gif-card-img" data-index="0" />
       <p>Donkey Kong</p>
     </div>
     <div class="gif-item">
-      <img src="luigi.gif" alt="Luigi" class="gif-card-img" />
+      <img src="luigi.gif" alt="Luigi" class="gif-card-img" data-index="1" />
       <p>Luigi</p>
     </div>
     <div class="gif-item">
-      <img src="supermario.gif" alt="Super Mario" class="gif-card-img" />
+      <img src="supermario.gif" alt="Super Mario" class="gif-card-img" data-index="2" />
       <p>Super Mario</p>
     </div>
     <div class="gif-item">
-      <img src="megaman.gif" alt="Mega Man" class="gif-card-img" />
+      <img src="megaman.gif" alt="Mega Man" class="gif-card-img" data-index="3" />
       <p>Mega Man</p>
     </div>
     <div class="gif-item">
-      <img src="sonic.gif" alt="Sonic" class="gif-card-img" />
+      <img src="sonic.gif" alt="Sonic" class="gif-card-img" data-index="4" />
       <p>Sonic</p>
     </div>
+  </div>
+  
+  <!-- Modal -->
+  <div id="gifModal" class="gif-modal">
+    <span class="gif-modal-close">&times;</span>
+    <img class="gif-modal-content" id="modalImage" />
+    <a class="gif-modal-prev" href="javascript:void(0);">&#10094;</a>
+    <a class="gif-modal-next" href="javascript:void(0);">&#10095;</a>
+    <div class="gif-modal-caption" id="modalCaption"></div>
   </div>
 </div>
 <div class="textstyle5"><span class="textstyle14"><br/><br/><br/><br/></span><video  id="video_353a5805" src="images/home_page_video.mp4" controls="controls"  loop="true" >
@@ -100,5 +109,81 @@ Your browser does not support the video element.
 </video></div>
 <div class="textstyle4"><span class="textstyle16"><br/><br/><br/><br/><br/><br/></span></div>
 <div style="clear:both"></div></div></div>  </div>
+
+<script>
+const gifData = [
+  { src: 'donkeykong.gif', title: 'Donkey Kong' },
+  { src: 'luigi.gif', title: 'Luigi' },
+  { src: 'supermario.gif', title: 'Super Mario' },
+  { src: 'megaman.gif', title: 'Mega Man' },
+  { src: 'sonic.gif', title: 'Sonic' }
+];
+
+let currentIndex = 0;
+const modal = document.getElementById('gifModal');
+const modalImage = document.getElementById('modalImage');
+const modalCaption = document.getElementById('modalCaption');
+const closeBtn = document.querySelector('.gif-modal-close');
+const prevBtn = document.querySelector('.gif-modal-prev');
+const nextBtn = document.querySelector('.gif-modal-next');
+const galleryImages = document.querySelectorAll('.gif-card-img');
+
+galleryImages.forEach(img => {
+  img.addEventListener('click', function() {
+    currentIndex = parseInt(this.getAttribute('data-index'));
+    openModal(currentIndex);
+  });
+});
+
+closeBtn.addEventListener('click', closeModal);
+
+prevBtn.addEventListener('click', function() {
+  currentIndex = (currentIndex - 1 + gifData.length) % gifData.length;
+  updateModalImage();
+});
+
+nextBtn.addEventListener('click', function() {
+  currentIndex = (currentIndex + 1) % gifData.length;
+  updateModalImage();
+});
+
+document.addEventListener('keydown', function(event) {
+  if (modal.classList.contains('active')) {
+    if (event.key === 'ArrowLeft') {
+      currentIndex = (currentIndex - 1 + gifData.length) % gifData.length;
+      updateModalImage();
+    } else if (event.key === 'ArrowRight') {
+      currentIndex = (currentIndex + 1) % gifData.length;
+      updateModalImage();
+    } else if (event.key === 'Escape') {
+      closeModal();
+    }
+  }
+});
+
+function openModal(index) {
+  currentIndex = index;
+  updateModalImage();
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  modal.classList.remove('active');
+  document.body.style.overflow = 'auto';
+}
+
+function updateModalImage() {
+  modalImage.src = gifData[currentIndex].src;
+  modalCaption.textContent = gifData[currentIndex].title;
+}
+
+modal.addEventListener('click', function(e) {
+  if (e.target === modal) {
+    closeModal();
+  }
+});
+</script>
+
 </body>
 </html>
